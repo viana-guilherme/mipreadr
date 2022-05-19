@@ -7,29 +7,33 @@
 
 plateParser<- function(plate_file, plate_map) {
 
-  # Abrir os arquivos que saíram do vetor as linhas da tabela "comprida":
+  # Open the 'long table' found in the output file of Victor X3:
   plate_rawdata <- suppressWarnings(readr::read_delim(file = plate_file, delim = "\t", show_col_types = FALSE))
 
-  #removes as linhas indesejadas a partir da que é diferente do esperado
+  #> removing the rows below the table that are not used in the analysis:
+  #> finds where the table ends (i.e. where the readr parsing went wrong)
   maxline <- readr::problems(plate_rawdata) %>%
     dplyr::pull(row) %>%
     min() - 1
-
+  #> cleans the input table
   plate_rawdata <- plate_rawdata |>  dplyr::filter(dplyr::row_number() < maxline)
 
-  # ler o excel com o desenho da placa e criar variáveis
+  # Opens the excel map file:
   map <- suppressMessages(readxl::read_excel(plate_map)) %>%
     tibble::column_to_rownames("...1")
-
+  #> turns the long map template into a 2-column tibble
   map_long <- purrr::map_df(.x = 1:nrow(map), ~ {
-    data <- purrr::map[.x,] %>%
-      tidyr::pivot_longer(cols = 1:12,
-                          values_to = "samples",
-                          names_to = "names") %>%
-      dplyr::mutate(names = paste0(rownames(map)[.x], names) %>% stringr::str_remove_all('\"'))
-    return(data)
-  })
+                      data <- purrr::map[.x,] %>% tidyr::pivot_longer(
+                                                          cols = 1:12,
+                                                          values_to = "samples",
+                                                          names_to = "names") %>%
+                                                  dplyr::mutate(
+                                                          names = paste0(rownames(map)[.x], names) %>%
+                                                          stringr::str_remove_all('\"'))
+                      return(data)
+                    })
 
+  #>
   unique_samples <- map_long %>% dplyr::select(samples) %>% unique() %>% dplyr::pull()
 
   sample_to_well <- NULL

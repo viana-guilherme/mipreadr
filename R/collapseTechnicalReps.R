@@ -8,7 +8,7 @@
 #' @return A small tibble with the calculated mean for the technical replicates
 #' @export
 
-CollapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells) {
+collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells) {
 
   plate |>
     dplyr::filter(Well %in% sample_wells)  |>

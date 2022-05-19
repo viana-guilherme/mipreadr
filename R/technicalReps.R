@@ -15,7 +15,7 @@ technicalReps <- function(plate_file, plate_map) {
     blank <- data$map_parsed$blank_wells[[sample]]
     name <- data$map_parsed$variable[sample]
 
-    collapse <- CollapseTechnicalReps(
+    collapse <- collapseTechnicalReps(
       sample_name = name,
       plate = data$rawdata,
       sample_wells = wells,
