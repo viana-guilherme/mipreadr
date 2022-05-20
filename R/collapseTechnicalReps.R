@@ -23,8 +23,8 @@ collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells)
 
   sample_mean <- sample_mean |>
     dplyr::mutate(Mean = Mean - blank_mean$Mean,
-                  Sample = sample_name)  |>
-    dplyr::relocate(Sample, .before = Mean)
+                  Variable = sample_name)  |>
+    dplyr::relocate(Variable, .before = Mean)
 
 
   return(sample_mean)

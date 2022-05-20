@@ -41,8 +41,6 @@ plateParser<- function(plate_file, plate_layout) {
   suppressMessages(plate_layout_parsed <- stringr::str_split(all_samples, "_", simplify = TRUE) |>
     tibble::as_tibble(.name_repair = "unique"))
 
-  teste <- ncol(plate_layout_parsed)
-
   # checks if Replicate numbers were manually given by the user
   if (ncol(plate_layout_parsed) == 3) {
 
@@ -66,7 +64,7 @@ plateParser<- function(plate_file, plate_layout) {
                                                       Blank <- stringr::str_subset(string = all_blanks,
                                                                                    pattern = .x)
                                                       return(Blank)}),
-      variable = stringr::str_c(Sample, Condition, sep = "_")) |>
+      variable = stringr::str_c(Sample, Condition, Replicate, sep = "_")) |>
       dplyr::relocate(variable)
 
   # attaching the wells to each sample, as stored in mapped_samples

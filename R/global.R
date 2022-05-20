@@ -13,5 +13,7 @@ utils::globalVariables(c(".data",
                          "condition",
                          "sample",
                          "samples",
+                         "Replicate",
+                         "Variable",
                          "."))
 

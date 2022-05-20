@@ -7,14 +7,16 @@ technicalReps <- function(plate_file, plate_layout) {
 
   data <- plateParser(plate_file, plate_layout)
 
-  collapsedTechicalReps <- NULL
+  collapsedTechnicalReps <- NULL
 
-  for (sample in 1:nrow(data$plate_layout_parsed)) {
+  for (smp in 1:nrow(data$plate_layout_parsed)) {
 
-    wells <- data$plate_layout_parsed$sample_wells[[sample]]
-    blank <- data$plate_layout_parsed$blank_wells[[sample]]
-    name <- data$plate_layout_parsed$variable[[sample]]
-    replicate <- data$plate_layout_parsed$Replicate[[sample]]
+    wells <- data$plate_layout_parsed$sample_wells[[smp]]
+    blank <- data$plate_layout_parsed$blank_wells[[smp]]
+    name <- data$plate_layout_parsed$variable[[smp]]
+    sample <- data$plate_layout_parsed$Sample[[smp]]
+    replicate <- data$plate_layout_parsed$Replicate[[smp]]
+    condition <- data$plate_layout_parsed$Condition[[smp]]
 
     collapse <- collapseTechnicalReps(
       sample_name = name,
@@ -22,13 +24,17 @@ technicalReps <- function(plate_file, plate_layout) {
       sample_wells = wells,
       blank_wells =  blank
     ) |>
-      dplyr::mutate(Replicate = replicate)
+      dplyr::mutate(Sample = sample,
+                    Condition = condition,
+                    Replicate = replicate,
+                    ) |>
+      dplyr::relocate(Variable, Sample, Condition, Replicate, Repeat, Mean)
 
-    collapsedTechicalReps <- dplyr::bind_rows(collapsedTechicalReps, collapse)
+    collapsedTechnicalReps <- dplyr::bind_rows(collapsedTechnicalReps, collapse)
 
   }
 
-  data$collapsedTechicalReps <- collapsedTechicalReps
+  data$collapsedTechnicalReps <- collapsedTechnicalReps
 
   return(data)
 }
