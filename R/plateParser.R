@@ -1,76 +1,85 @@
-#' reads a plate map from a file
+#' reads a plate plate layout from a file
 #'
 #' @param plate_file A VictorX output file
-#' @param plate_map A .xlsx spreadsheet mapping samples to wells in a 96 well plate
+#' @param plate_layout A .xlsx spreadsheet mapping samples to wells in a 96 well plate
 #' @return a list containing the formatted table map and metadata, as well as the raw data from plate_file
 #' @export
 
-plateParser<- function(plate_file, plate_map) {
+plateParser<- function(plate_file, plate_layout) {
 
-  # Open the 'long table' found in the output file of Victor X3:
-  plate_rawdata <- suppressWarnings(readr::read_delim(file = plate_file, delim = "\t", show_col_types = FALSE))
+  # reading the inputs
+  plate_rawdata <- readPlateInput(plate_file)
+  plate_layout_long <- elongateLayout(plate_layout)
 
-  #> removing the rows below the table that are not used in the analysis:
-  #> finds where the table ends (i.e. where the readr parsing went wrong)
-  maxline <- readr::problems(plate_rawdata) %>%
-    dplyr::pull(row) %>%
-    min() - 1
-  #> cleans the input table
-  plate_rawdata <- plate_rawdata |>  dplyr::filter(dplyr::row_number() < maxline)
+  # find the unique sample names in the plate layout input
+  unique_samples <- plate_layout_long |>
+                      dplyr::select(Samples) |>
+                      unique() |>
+                      dplyr::pull()
 
-  # Opens the excel map file:
-  map <- suppressMessages(readxl::read_excel(plate_map)) %>%
-    tibble::column_to_rownames("...1")
-  #> turns the long map template into a 2-column tibble
-  map_long <- purrr::map_df(.x = 1:nrow(map), ~ {
-                      data <- purrr::map[.x,] %>% tidyr::pivot_longer(
-                                                          cols = 1:12,
-                                                          values_to = "samples",
-                                                          names_to = "names") %>%
-                                                  dplyr::mutate(
-                                                          names = paste0(rownames(map)[.x], names) %>%
-                                                          stringr::str_remove_all('\"'))
-                      return(data)
-                    })
-
-  #>
-  unique_samples <- map_long %>% dplyr::select(samples) %>% unique() %>% dplyr::pull()
-
-  sample_to_well <- NULL
-
+  # mapping the unique samples to their respective wells, saves in a tibble
+  mapped_samples <- NULL
   for (sample in unique_samples) {
-    wells <- map_long %>%
-      dplyr::filter(samples == sample) %>%
-      dplyr::select(names) %>%
-      dplyr::pull
 
-    subset <- tibble::tibble(sample = sample, wells = list(wells))
+    wells <- plate_layout_long  |>
+      dplyr::filter(Samples == sample)  |>
+      dplyr::select(Wells) |>
+      dplyr::pull()
 
-    sample_to_well <- dplyr::bind_rows(sample_to_well, subset)
+    sample_to_well <- tibble::tibble(variable = sample, wells = list(wells))
+
+    mapped_samples <- dplyr::bind_rows(mapped_samples, sample_to_well)
   }
 
+  # separating blanks (#) from the remaining samples
+  all_blanks <- unique_samples |> stringr::str_subset("#", negate = FALSE)
+  all_samples <- unique_samples |>  stringr::str_subset("#", negate = TRUE)
 
-  all_blanks <- unique_samples %>% stats::na.omit() %>% stringr::str_subset("[Bb]lank_", negate = FALSE)
-  all_samples <- unique_samples %>% stats::na.omit() %>% stringr::str_subset("[Bb]lank_", negate = TRUE)
 
-  map_parsed <- stringr::str_split(all_samples, "_", simplify = TRUE) %>%
-    magrittr::set_colnames(c("sample", "condition")) %>%
-    tibble::as_tibble() %>%
-    dplyr::mutate(blank = purrr::map_chr(.x = .$condition, ~ {
-      blank <- stringr::str_subset(string = all_blanks, pattern = .x)
-      return(blank)}),
-      variable = stringr::str_c(sample, condition, sep = "_"))
+  # parsing the names given in the plate layout to be used as metadata
 
-  map_parsed <- dplyr::left_join(x = map_parsed, y = sample_to_well, by = c("variable" = "sample")) %>%
-    dplyr::rename(sample_wells = wells) %>%
-    dplyr::left_join(y = sample_to_well, by = c("blank" = "sample")) %>%
+  plate_layout_parsed <- stringr::str_split(all_samples, "_", simplify = TRUE) |>
+    tibble::as_tibble(.name_repair = "unique")
+
+  teste <- ncol(plate_layout_parsed)
+
+  # checks if Replicate numbers were manually given by the user
+  if (ncol(plate_layout_parsed) == 3) {
+
+    Replicate_number <- purrr::map_dbl(
+      .x = as.numeric(plate_layout_parsed$...3), ~ ifelse(is.na(.x), 1, .x))
+
+    } else {
+
+    Replicate_number <- rep(1, times = nrow(plate_layout_parsed))
+
+    }
+
+  # assembles the plate metadata tibble
+  plate_metadata <- tibble::tibble(Sample = plate_layout_parsed[[1]],
+                                   Condition = plate_layout_parsed[[2]],
+                                   Replicate = Replicate_number)
+
+  # attaching the corresponding blanks to the samples
+  plate_metadata <- dplyr::mutate(plate_metadata,
+                                       blank = purrr::map_chr(.x = .data$Condition, ~ {
+                                                      Blank <- stringr::str_subset(string = all_blanks,
+                                                                                   pattern = .x)
+                                                      return(Blank)}),
+      variable = stringr::str_c(Sample, Condition, sep = "_")) |>
+      dplyr::relocate(variable)
+
+  # attaching the wells to each sample, as stored in mapped_samples
+  plate_metadata <- dplyr::left_join(x = plate_metadata, y = mapped_samples) |>
+    dplyr::rename(sample_wells = wells) |>
+    dplyr::left_join(y = mapped_samples, by = c("blank" = "variable")) |>
     dplyr::rename(blank_wells = wells)
 
   # determine the plate name based on the path to the map files
-  platename <- stringr::str_extract(plate_map, pattern = "(?<=/).+(?=.xlsx)") %>%
+  platename <- stringr::str_extract(plate_layout, pattern = ".+(?=.xlsx)") |>
     stringr::str_replace_all(pattern = "/", replacement = "_")
 
-
+  # finishing the function
   message(
     paste0("Finished parsing plate ",
            platename,
@@ -81,8 +90,7 @@ plateParser<- function(plate_file, plate_map) {
 
   output <- tibble::lst(platename = platename,
                         rawdata = plate_rawdata,
-                        map_parsed = map_parsed
-  )
+                        plate_layout_parsed = plate_layout_parsed)
 
   return(output)
 }
