@@ -9,11 +9,11 @@ technicalReps <- function(plate_file, plate_layout) {
 
   collapsedTechicalReps <- NULL
 
-  for (sample in 1:nrow(data$map_parsed)) {
+  for (sample in 1:nrow(data$plate_layout_parsed)) {
 
-    wells <- data$map_parsed$sample_wells[[sample]]
-    blank <- data$map_parsed$blank_wells[[sample]]
-    name <- data$map_parsed$variable[sample]
+    wells <- data$plate_layout_parsed$sample_wells[[sample]]
+    blank <- data$plate_layout_parsed$blank_wells[[sample]]
+    name <- data$plate_layout_parsed$variable[sample]
 
     collapse <- collapseTechnicalReps(
       sample_name = name,

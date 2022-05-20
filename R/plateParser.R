@@ -90,7 +90,7 @@ plateParser<- function(plate_file, plate_layout) {
 
   output <- tibble::lst(platename = platename,
                         rawdata = plate_rawdata,
-                        plate_layout_parsed = plate_layout_parsed)
+                        plate_layout_parsed = plate_metadata)
 
   return(output)
 }
