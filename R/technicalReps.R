@@ -3,9 +3,9 @@
 #' @export
 #'
 
-technicalReps <- function(plate_file, plate_map) {
+technicalReps <- function(plate_file, plate_layout) {
 
-  data <- plateParser(plate_file, plate_map)
+  data <- plateParser(plate_file, plate_layout)
 
   collapsedTechicalReps <- NULL
 

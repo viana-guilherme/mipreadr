@@ -4,12 +4,12 @@
 \alias{technicalReps}
 \title{calculates all of the technical replicate means}
 \usage{
-technicalReps(plate_file, plate_map)
+technicalReps(plate_file, plate_layout)
 }
 \arguments{
 \item{plate_file}{A VictorX output file}
 
-\item{plate_map}{A .xlsx spreadsheet mapping samples to wells in a 96 well plate}
+\item{plate_layout}{A .xlsx spreadsheet mapping samples to wells in a 96 well plate}
 }
 \description{
 calculates all of the technical replicate means
