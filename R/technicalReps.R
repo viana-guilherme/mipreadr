@@ -13,14 +13,17 @@ technicalReps <- function(plate_file, plate_layout) {
 
     wells <- data$plate_layout_parsed$sample_wells[[sample]]
     blank <- data$plate_layout_parsed$blank_wells[[sample]]
-    name <- data$plate_layout_parsed$variable[sample]
+    name <- data$plate_layout_parsed$variable[[sample]]
+    replicate <- data$plate_layout_parsed$Replicate[[sample]]
 
     collapse <- collapseTechnicalReps(
       sample_name = name,
       plate = data$rawdata,
       sample_wells = wells,
       blank_wells =  blank
-    )
+    ) |>
+      dplyr::mutate(Replicate = replicate)
+
     collapsedTechicalReps <- dplyr::bind_rows(collapsedTechicalReps, collapse)
 
   }

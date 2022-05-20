@@ -38,8 +38,8 @@ plateParser<- function(plate_file, plate_layout) {
 
   # parsing the names given in the plate layout to be used as metadata
 
-  plate_layout_parsed <- stringr::str_split(all_samples, "_", simplify = TRUE) |>
-    tibble::as_tibble(.name_repair = "unique")
+  suppressMessages(plate_layout_parsed <- stringr::str_split(all_samples, "_", simplify = TRUE) |>
+    tibble::as_tibble(.name_repair = "unique"))
 
   teste <- ncol(plate_layout_parsed)
 
@@ -62,7 +62,7 @@ plateParser<- function(plate_file, plate_layout) {
 
   # attaching the corresponding blanks to the samples
   plate_metadata <- dplyr::mutate(plate_metadata,
-                                       blank = purrr::map_chr(.x = .data$Condition, ~ {
+                                       blank = purrr::map_chr(.x = plate_metadata$Condition, ~ {
                                                       Blank <- stringr::str_subset(string = all_blanks,
                                                                                    pattern = .x)
                                                       return(Blank)}),
@@ -70,10 +70,10 @@ plateParser<- function(plate_file, plate_layout) {
       dplyr::relocate(variable)
 
   # attaching the wells to each sample, as stored in mapped_samples
-  plate_metadata <- dplyr::left_join(x = plate_metadata, y = mapped_samples) |>
+  suppressMessages(plate_metadata <- dplyr::left_join(x = plate_metadata, y = mapped_samples) |>
     dplyr::rename(sample_wells = wells) |>
     dplyr::left_join(y = mapped_samples, by = c("blank" = "variable")) |>
-    dplyr::rename(blank_wells = wells)
+    dplyr::rename(blank_wells = wells))
 
   # determine the plate name based on the path to the map files
   platename <- stringr::str_extract(plate_layout, pattern = ".+(?=.xlsx)") |>
