@@ -1,9 +1,10 @@
 #' Generate a 96-well map template
-#' @param map_name A string specifying the name for the map template.
+#' @param template_name A string specifying the name for the map template.
 #' @param interactive Use interactive mode to design template
 #' @export
 #'
-createMap <- function(map_name, interactive = FALSE) {
+
+createTemplate <- function(template_name, interactive = FALSE) {
 
   column_names <- c(NULL, c(paste0("0", 1:9), 10, 11, 12))
   row_names <- c(NULL, LETTERS[1:8])
@@ -13,13 +14,13 @@ createMap <- function(map_name, interactive = FALSE) {
                 magrittr::set_rownames(row_names) |>
                 tibble::as_tibble(rownames = " ")
 
-  out_path = file.path(here::here(),paste0(map_name,".xlsx"))
+  out_path = file.path(here::here(),paste0(template_name,".xlsx"))
 
   writexl::write_xlsx(x = out_table,
                       format_headers = FALSE,
                       path = out_path)
 
-  message(paste0(" Map template created in ", here::here(), '!'))
+  message(paste0("Empty plate template created in ", here::here(), "!"))
 
 
   if(interactive) { message("ATIVADO") }
