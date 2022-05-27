@@ -4,10 +4,10 @@
 \alias{biologicalReps}
 \title{calculates all of the biological replicate means}
 \usage{
-biologicalReps(x)
+biologicalReps(inputlist)
 }
 \arguments{
-\item{x}{A list generated with technicalReps}
+\item{inputlist}{A vector of list names to be collapsed}
 }
 \description{
 calculates all of the biological replicate means

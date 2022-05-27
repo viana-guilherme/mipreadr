@@ -15,5 +15,7 @@ utils::globalVariables(c(".data",
                          "samples",
                          "Replicate",
                          "Variable",
+                         "BiologicalRepMean",
+                         "BiologicalRepSD",
                          "."))
 
