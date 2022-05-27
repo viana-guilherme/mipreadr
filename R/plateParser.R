@@ -38,11 +38,15 @@ plateParser<- function(plate_file, plate_layout) {
 
   # parsing the names given in the plate layout to be used as metadata
 
-  suppressMessages(plate_layout_parsed <- stringr::str_split(all_samples, "_", simplify = TRUE) |>
-    tibble::as_tibble(.name_repair = "unique"))
+  suppressMessages(
+    plate_layout_parsed <- stringr::str_split(all_samples, "_", simplify = TRUE) |>
+    tibble::as_tibble(.name_repair = "unique") |>
+    dplyr::mutate(variable = all_samples) |>
+    dplyr::relocate(variable)
+    )
 
   # checks if Replicate numbers were manually given by the user
-  if (ncol(plate_layout_parsed) == 3) {
+  if (ncol(plate_layout_parsed) == 4) {
 
     Replicate_number <- purrr::map_dbl(
       .x = as.numeric(plate_layout_parsed$...3), ~ ifelse(is.na(.x), 1, .x))
@@ -54,8 +58,9 @@ plateParser<- function(plate_file, plate_layout) {
     }
 
   # assembles the plate metadata tibble
-  plate_metadata <- tibble::tibble(Sample = plate_layout_parsed[[1]],
-                                   Condition = plate_layout_parsed[[2]],
+  plate_metadata <- tibble::tibble(variable = plate_layout_parsed[[1]],
+                                   Sample = plate_layout_parsed[[2]],
+                                   Condition = plate_layout_parsed[[3]],
                                    Replicate = Replicate_number)
 
   # attaching the corresponding blanks to the samples
@@ -63,9 +68,7 @@ plateParser<- function(plate_file, plate_layout) {
                                        blank = purrr::map_chr(.x = plate_metadata$Condition, ~ {
                                                       Blank <- stringr::str_subset(string = all_blanks,
                                                                                    pattern = .x)
-                                                      return(Blank)}),
-      variable = stringr::str_c(Sample, Condition, Replicate, sep = "_")) |>
-      dplyr::relocate(variable)
+                                                      return(Blank)}))
 
   # attaching the wells to each sample, as stored in mapped_samples
   suppressMessages(plate_metadata <- dplyr::left_join(x = plate_metadata, y = mapped_samples) |>
@@ -83,7 +86,8 @@ plateParser<- function(plate_file, plate_layout) {
            platename,
            "!\nFound ",
            length(all_samples),
-           " unique samples")
+           " unique samples:\n",
+           stringr::str_flatten(all_samples, collapse = ",\n"))
   )
 
   output <- tibble::lst(platename = platename,

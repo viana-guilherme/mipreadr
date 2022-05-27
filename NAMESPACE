@@ -3,6 +3,7 @@
 export(biologicalReps)
 export(collapseTechnicalReps)
 export(createTemplate)
+export(makeWideTable)
 export(plateParser)
 export(readPlateInput)
 export(technicalReps)
