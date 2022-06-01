@@ -5,7 +5,7 @@
 #' @return a list containing the formatted table map and metadata, as well as the raw data from plate_file
 #' @export
 
-plateParser<- function(plate_file, plate_layout) {
+plateParser <- function(plate_file, plate_layout) {
 
   # reading the inputs
   plate_rawdata <- readPlateInput(plate_file)
@@ -65,7 +65,7 @@ plateParser<- function(plate_file, plate_layout) {
 
   # attaching the corresponding blanks to the samples
   plate_metadata <- dplyr::mutate(plate_metadata,
-                                       blank = purrr::map_chr(.x = plate_metadata$Condition, ~ {
+                                       blank = purrr::map_chr(.x = paste0("#", plate_metadata$Condition), ~ {
                                                       Blank <- stringr::str_subset(string = all_blanks,
                                                                                    pattern = .x)
                                                       return(Blank)}))
