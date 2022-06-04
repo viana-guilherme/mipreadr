@@ -4,7 +4,13 @@
 \alias{collapseTechnicalReps}
 \title{Calculate technical replicate means for a single sample}
 \usage{
-collapseTechnicalReps(sample_name, plate, sample_wells, blank_wells)
+collapseTechnicalReps(
+  sample_name,
+  plate,
+  sample_wells,
+  blank_wells,
+  normalize = TRUE
+)
 }
 \arguments{
 \item{sample_name}{The name for the sample to be collapsed}
@@ -14,6 +20,8 @@ collapseTechnicalReps(sample_name, plate, sample_wells, blank_wells)
 \item{sample_wells}{A character vector pointing the coordinates (e.g. "A01", "B02"...) for the sample within the plate}
 
 \item{blank_wells}{A character vector pointing the coordinates for the wells of the 'blank'}
+
+\item{normalize}{(logical) Should the fluorescence values be normalized by the absorbance?}
 }
 \value{
 A small tibble with the calculated mean for the technical replicates

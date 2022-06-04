@@ -28,7 +28,7 @@ technicalReps <- function(plate_file, plate_layout) {
                     Condition = condition,
                     Replicate = replicate,
                     ) |>
-      dplyr::relocate(Variable, Sample, Condition, Replicate, Repeat, Mean)
+      dplyr::relocate(Variable, Sample, Condition, Replicate, Repeat)
 
     collapsedTechnicalReps <- dplyr::bind_rows(collapsedTechnicalReps, collapse)
 
