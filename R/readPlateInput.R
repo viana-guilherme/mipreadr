@@ -8,7 +8,12 @@
 readPlateInput <- function(input_file) {
 
   # Open the 'long table' found in the output file of Victor X3:
-  plate_rawdata <- suppressWarnings(readr::read_delim(file = input_file, delim = "\t", show_col_types = FALSE))
+  suppressMessages(suppressWarnings(
+  plate_rawdata <- readr::read_delim(file = input_file,
+                                     delim = "\t",
+                                     col_types = "nncctdtdtd",
+                                     show_col_types = FALSE)
+  ))
 
   #> finds where the table ends (i.e. where the readr parsing went wrong)
   maxline <- readr::problems(plate_rawdata) %>%
