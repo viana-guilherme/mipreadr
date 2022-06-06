@@ -4,11 +4,10 @@
 #' @param plate The plate rawdata from which to calculate means
 #' @param sample_wells A character vector pointing the coordinates (e.g. "A01", "B02"...) for the sample within the plate
 #' @param blank_wells A character vector pointing the coordinates for the wells of the 'blank'
-#' @param normalize (logical) Should the fluorescence values be normalized by the absorbance?
 #' @return A small tibble with the calculated mean for the technical replicates
 #'
 
-collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells, normalize = TRUE) {
+collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells, normalizeFluorescence = TRUE) {
 
   # determining columns of interest for the function (absorbance, and fluorescence measurements)
   colnames_to_use <- colnames(plate) |>
@@ -41,8 +40,8 @@ collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells,
     assign(x = varName, value = {
       sample |>
       dplyr::mutate(Variable = sample_name,
-                    Mean = Mean - blank$Mean)  |>
-      dplyr::relocate(Variable, .before = Mean)|>
+                    Mean = if (stringr::str_detect(eval(varName), "Absorbance")) {Mean - blank$Mean} else {Mean})  |>
+      dplyr::relocate(Variable, .before = Mean) |>
       dplyr::rename_with(.fn = ~ eval(varName), .cols = Mean)
     })
   }
@@ -58,20 +57,19 @@ collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells,
     }
   }
 
-  # normalize fluorescence by absorbance values
 
-  if (normalize) {
+  # normalize fluorescence by absorbance values if the user wishes so
+  if (normalizeFluorescence) {
 
     abs <- stringr::str_subset(colnames(sample_mean), pattern = "Absorbance")
-    fluo <- stringr::str_subset(colnames(sample_mean), pattern = "Absorbance|Repeat|Variable", negate = TRUE)
+    fluo <- stringr::str_subset(colnames(sample_mean), pattern = "Sample|Condition|Replicate|Absorbance|Repeat|Variable", negate = TRUE)
 
     for (f in 1:length(fluo)) {
-      column_name <- paste0(fluo[f],"/",abs)
+      column_name <- glue::glue("norm.{fluo[f]}")
 
       sample_mean <- sample_mean |>
         dplyr::mutate(normalized = .data[[fluo[f]]]/.data[[abs]]) |>
         dplyr::rename_with(.fn = ~ eval(column_name), .cols = normalized)
-
     }
   }
 

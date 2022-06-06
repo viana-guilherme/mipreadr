@@ -8,6 +8,8 @@ biologicalReps(inputlist)
 }
 \arguments{
 \item{inputlist}{A vector of list names to be collapsed}
+
+\item{normalizeFluorescence}{(logical) Should the fluorescence values be normalized by the absorbance?}
 }
 \description{
 calculates all of the biological replicate means
