@@ -4,12 +4,14 @@
 \alias{addPlate}
 \title{calculates all of the technical replicate means}
 \usage{
-addPlate(file, layout)
+addPlate(file, layout, normalizeFluorescence = FALSE)
 }
 \arguments{
 \item{file}{A VictorX output file}
 
 \item{layout}{A .xlsx spreadsheet mapping samples to wells in a 96 well plate}
+
+\item{normalizeFluorescence}{(logical) Should the fluorescence values be normalized by the absorbance?}
 }
 \description{
 calculates all of the technical replicate means

@@ -20,5 +20,6 @@ utils::globalVariables(c(".data",
                          ".",
                          "blank",
                          "value",
-                         "normalized"))
+                         "normalized",
+                         '` `'))
 

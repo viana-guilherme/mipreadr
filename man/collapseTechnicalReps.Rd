@@ -9,7 +9,7 @@ collapseTechnicalReps(
   plate,
   sample_wells,
   blank_wells,
-  normalizeFluorescence = TRUE
+  normalizeFluorescence = FALSE
 )
 }
 \arguments{

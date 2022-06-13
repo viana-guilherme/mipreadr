@@ -1,5 +1,6 @@
 #' calculates all of the technical replicate means
 #' @inheritParams plateParser
+#' @param normalizeFluorescence (logical) Should the fluorescence values be normalized by the absorbance?
 #' @export
 #'
 

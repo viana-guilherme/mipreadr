@@ -16,20 +16,20 @@ templateGadget <- function(template_path, template_name = "") {
       rhandsontable::rhandsontable(plate_layout, width = "100%", stretchW = "all", stretchH = "all")
     })
 
-    observeEvent(input$done, {
+    shiny::observeEvent(input$done, {
 
       out_data <- rhandsontable::hot_to_r(input$rTable) |>
         dplyr::mutate(" " = rownames(plate_layout)) |>
-        dplyr::relocate(` `)
+        dplyr::relocate(.data[[" "]])
 
       writexl::write_xlsx(x = out_data,
                           format_headers = FALSE,
                           path = template_path)
-      stopApp()
+      shiny::stopApp()
     })
 
-    observeEvent(input$cancel, {
-      stopApp()
+    shiny::observeEvent(input$cancel, {
+      shiny::stopApp()
     })
 
   }
