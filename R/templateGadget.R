@@ -1,20 +1,39 @@
-
-templateGadget <- function(template) {
-
-  column_names <- c(NULL, c(paste0("0", 1:9), 10, 11, 12))
-  row_names <- c(NULL, LETTERS[1:8])
-
-  out_table <- matrix(data = "",nrow = 8, ncol = 12) |>
-    magrittr::set_colnames(paste0('"',column_names,'"')) |>
-    magrittr::set_rownames(row_names)
-
-  rhandsontable::rhandsontable(out_table, width = 9000, height = 300)
+templateGadget <- function(template_path, template_name = "") {
 
   ui <- miniUI::miniPage(
-    miniUI::gadgetTitleBar("Template Editor")
+    miniUI::gadgetTitleBar(glue::glue("x3 Template Editor - {template_name}")),
+    shiny::fillPage(
+    miniUI::miniContentPanel(scrollable = FALSE, padding = 10,
+    rhandsontable::rHandsontableOutput("rTable")))
   )
 
-  server <- function(input, output, session){}
+  server <- function(input, output, session){
 
-  shiny::runGadget(shiny::shinyApp(ui, server), viewer = shiny::paneViewer())
+    plate_layout <- suppressMessages(readxl::read_excel(template_path, col_types = "text")) |>
+      tibble::column_to_rownames("...1")
+
+    output$rTable <- rhandsontable::renderRHandsontable({
+      rhandsontable::rhandsontable(plate_layout, width = "100%", stretchW = "all", stretchH = "all")
+    })
+
+    observeEvent(input$done, {
+
+      out_data <- rhandsontable::hot_to_r(input$rTable) |>
+        dplyr::mutate(" " = rownames(plate_layout)) |>
+        dplyr::relocate(` `)
+
+      writexl::write_xlsx(x = out_data,
+                          format_headers = FALSE,
+                          path = template_path)
+      stopApp()
+    })
+
+    observeEvent(input$cancel, {
+      stopApp()
+    })
+
+  }
+
+    suppressMessages(shiny::runGadget(shiny::shinyApp(ui, server),
+                   viewer = shiny::paneViewer(minHeight = 300)))
 }

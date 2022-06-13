@@ -1,15 +1,15 @@
 #' reads a plate plate layout from a file
 #'
-#' @param plate_file A VictorX output file
-#' @param plate_layout A .xlsx spreadsheet mapping samples to wells in a 96 well plate
+#' @param file A VictorX output file
+#' @param layout A .xlsx spreadsheet mapping samples to wells in a 96 well plate
 #' @return a list containing the formatted table map and metadata, as well as the raw data from plate_file
 #' @export
 
-plateParser <- function(plate_file, plate_layout) {
+plateParser <- function(file, layout) {
 
   # reading the inputs
-  plate_rawdata <- readPlateInput(plate_file)
-  plate_layout_long <- elongateLayout(plate_layout)
+  plate_rawdata <- readPlateInput(file)
+  plate_layout_long <- elongateLayout(layout)
 
   # find the unique sample names in the plate layout input
   unique_samples <- plate_layout_long |>
@@ -77,7 +77,7 @@ plateParser <- function(plate_file, plate_layout) {
     dplyr::rename(blank_wells = wells))
 
   # determine the plate name based on the path to the map files
-  platename <- stringr::str_extract(plate_layout, pattern = ".+(?=.xlsx)") |>
+  platename <- stringr::str_extract(layout, pattern = "\\w.+(?=.xlsx)") |>
     stringr::str_replace_all(pattern = "/", replacement = "_")
 
   # finishing the function

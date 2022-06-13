@@ -4,10 +4,11 @@
 #' @param plate The plate rawdata from which to calculate means
 #' @param sample_wells A character vector pointing the coordinates (e.g. "A01", "B02"...) for the sample within the plate
 #' @param blank_wells A character vector pointing the coordinates for the wells of the 'blank'
+#' @param normalizeFluorescence (logical) Should the fluorescence values be normalized by the absorbance?
 #' @return A small tibble with the calculated mean for the technical replicates
 #'
 
-collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells, normalizeFluorescence = TRUE) {
+collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells, normalizeFluorescence = FALSE) {
 
   # determining columns of interest for the function (absorbance, and fluorescence measurements)
   colnames_to_use <- colnames(plate) |>
@@ -37,6 +38,9 @@ collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells,
         dplyr::group_by(Repeat) |>
         dplyr::summarise(Mean = mean(.data[[colName]]))
 
+
+    # TODO: CREATE A WAY TO SPECIFY NORMALIZATION METHOD
+
     assign(x = varName, value = {
       sample |>
       dplyr::mutate(Variable = sample_name,
@@ -59,6 +63,7 @@ collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells,
 
 
   # normalize fluorescence by absorbance values if the user wishes so
+
   if (normalizeFluorescence) {
 
     abs <- stringr::str_subset(colnames(sample_mean), pattern = "Absorbance")

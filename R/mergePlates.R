@@ -1,9 +1,8 @@
 #' calculates all of the biological replicate means
 #' @param inputlist A vector of list names to be collapsed
-#' @param normalizeFluorescence (logical) Should the fluorescence values be normalized by the absorbance?
 #' @export
 #'
-biologicalReps <- function(inputlist) {
+mergePlates <- function(inputlist) {
 
   # collecting all of the technical replicates data into a single - larger - data frame
   all_bio_reps <- NULL

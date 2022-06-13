@@ -17,5 +17,8 @@ utils::globalVariables(c(".data",
                          "Variable",
                          "BiologicalRepMean",
                          "BiologicalRepSD",
-                         "."))
+                         ".",
+                         "blank",
+                         "value",
+                         "normalized"))
 

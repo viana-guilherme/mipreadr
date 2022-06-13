@@ -3,10 +3,10 @@
 #' @export
 #'
 
-technicalReps <- function(plate_file, plate_layout) {
+addPlate <- function(file, layout, normalizeFluorescence = FALSE) {
 
-  data <- plateParser(plate_file, plate_layout)
-
+  data <- plateParser(file, layout)
+  normalize <- normalizeFluorescence
   collapsedTechnicalReps <- NULL
 
   for (smp in 1:nrow(data$plate_layout_parsed)) {
@@ -22,7 +22,8 @@ technicalReps <- function(plate_file, plate_layout) {
       sample_name = name,
       plate = data$rawdata,
       sample_wells = wells,
-      blank_wells =  blank
+      blank_wells =  blank,
+      normalizeFluorescence = normalize
     ) |>
       dplyr::mutate(Sample = sample,
                     Condition = condition,

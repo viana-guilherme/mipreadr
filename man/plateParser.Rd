@@ -4,12 +4,12 @@
 \alias{plateParser}
 \title{reads a plate plate layout from a file}
 \usage{
-plateParser(plate_file, plate_layout)
+plateParser(file, layout)
 }
 \arguments{
-\item{plate_file}{A VictorX output file}
+\item{file}{A VictorX output file}
 
-\item{plate_layout}{A .xlsx spreadsheet mapping samples to wells in a 96 well plate}
+\item{layout}{A .xlsx spreadsheet mapping samples to wells in a 96 well plate}
 }
 \value{
 a list containing the formatted table map and metadata, as well as the raw data from plate_file
