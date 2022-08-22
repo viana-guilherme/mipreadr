@@ -11,9 +11,9 @@
 collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells, normalizeFluorescence = FALSE) {
 
   # determining columns of interest for the function (absorbance, and fluorescence measurements)
-  colnames_to_use <- colnames(plate) |>
+colnames_to_use <- colnames(plate) |>
     stringr::str_replace_all(pattern = " ", replacement = "") |>
-    stringr::str_extract_all(pattern = ".+(?=\\(Counts\\)|@)", simplify = TRUE) |>
+    stringr::str_extract_all(pattern = ".+(?=\\(Counts\\)|\\(CPS\\)|\\(A\\))", simplify = TRUE) |>
     stringr::str_remove_all(pattern = '""') |>
     dplyr::as_tibble() |>
     dplyr::bind_cols(column_names = colnames(plate)) |>
