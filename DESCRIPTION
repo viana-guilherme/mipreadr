@@ -1,4 +1,4 @@
-Package: x3PlateReader
+Package: mipreadr
 Title: Tidily access data from Perkin Elmer microplate reader software
 Version: 0.0.0.9000
 Authors@R: 

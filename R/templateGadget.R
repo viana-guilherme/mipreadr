@@ -1,7 +1,7 @@
 templateGadget <- function(layout_path, layout_name = "") {
 
   ui <- miniUI::miniPage(
-    miniUI::gadgetTitleBar(glue::glue("x3 Template Editor - {layout_name}")),
+    miniUI::gadgetTitleBar(glue::glue("mipreadr Template Editor - {layout_name}")),
     shiny::fillPage(
     miniUI::miniContentPanel(scrollable = FALSE, padding = 10,
     rhandsontable::rHandsontableOutput("rTable")))
