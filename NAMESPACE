@@ -2,7 +2,7 @@
 
 export(addPlate)
 export(checkReplicates)
-export(createTemplate)
+export(createLayout)
 export(makeWideTable)
 export(mergePlates)
 export(plateParser)
