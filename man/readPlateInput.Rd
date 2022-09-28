@@ -4,10 +4,21 @@
 \alias{readPlateInput}
 \title{Read plate input file}
 \usage{
-readPlateInput(input_file)
+readPlateInput(
+  input_file,
+  mode = "x3",
+  delimiter = "\\t",
+  point_measure = FALSE
+)
 }
 \arguments{
-\item{input_file}{A Victor X3 output file (in format .txt)}
+\item{input_file}{A microplate reader output file (in formats .txt or .csv)}
+
+\item{mode}{Which parsing function to use. Currently supports "x3" for Victor X3 conventional output file, or "nivo" for Victor Nivo files}
+
+\item{delimiter}{Field delimiter used in the file}
+
+\item{point_measure}{for mode = "nivo", tells whether the output file is a point measurement, or if there are several points into the same file}
 }
 \value{
 A tibble
