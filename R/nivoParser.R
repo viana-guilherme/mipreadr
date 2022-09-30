@@ -9,10 +9,10 @@ nivoParser <- function(input_file, delimiter = "\t", point_measure = FALSE) {
 
   # file structure
   # 1. "metadata"
-  # 2. measurements
-  # 3. parameters for (2.)
+  # 2. measurements         < can be repeated for protocols with more than one measurement type
+  # 3. parameters for (2.)  < can be repeated for protocols with more than one measurement type
   # 4. descriptions for each step in the protocol
-  # 5. plate map
+  # 5. plate map            < if exported by the user
 
   # retrieving the field delimiter indexes
   operationCatcher <- stringr::str_which(input_nivo, pattern = "\\d\\sOPERATION")
