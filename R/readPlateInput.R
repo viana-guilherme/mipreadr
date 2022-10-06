@@ -29,7 +29,7 @@ readPlateInput <- function(input_file, mode = "x3", delimiter = "\t", point_meas
 
   } else if (mode == "nivo") {
 
-    plate_rawdata <-  nivoParser(input_file)
+    plate_rawdata <-  nivoParser(input_file, delimiter = delimiter, point_measure = point_measure)
 
   } else {
     stop('Please enter a valid parsing mode (current accepted values are "x3" or "nivo")', call. = FALSE)

@@ -85,7 +85,7 @@ nivoParser <- function(input_file, delimiter = "\t", point_measure = FALSE) {
 
     # categories
     # 1st: only two first fields are filled (Metadata)
-    metadata <- input |>
+    metadata <- result |>
       dplyr::filter(!is.na(X) & !is.na(X.1) & is.na(X.2)) |>
       janitor::remove_empty("cols")
 
@@ -96,14 +96,14 @@ nivoParser <- function(input_file, delimiter = "\t", point_measure = FALSE) {
       dplyr::pull()
 
     # 2nd: first field is blank (Plate, Barcode, Cycle)
-    operation_vars <- input |>
+    operation_vars <- result |>
       dplyr::filter(is.na(X)) |>
       janitor::remove_empty("cols") |>
       tidyr::pivot_longer(cols = !X.1, names_to = "index") |>
       tidyr::pivot_wider(names_from = X.1, values_from = value)
 
     # 3rd: all fields are filled (Well + time(s))
-    time_vars <- input |>
+    time_vars <- result |>
       stats::na.omit() |>
       janitor::remove_empty("cols") |>
       dplyr::select(!X) |>
@@ -111,7 +111,7 @@ nivoParser <- function(input_file, delimiter = "\t", point_measure = FALSE) {
       tidyr::pivot_wider(names_from = X.1, values_from = value)
 
     # 4th: second field is blank (Well data)
-    well_data <- input |>
+    well_data <- result |>
       dplyr::filter(is.na(X.1)) |>
       janitor::remove_empty("cols") |>
       tidyr::pivot_longer(cols = !X, names_to = "index", values_to = measure_name)
