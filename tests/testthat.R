@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(x3PlateReader)
+library(mipreadr)
 
-test_check("x3PlateReader")
+test_check("mipreadr")

@@ -4,12 +4,25 @@
 \alias{addPlate}
 \title{calculates all of the technical replicate means}
 \usage{
-addPlate(file, layout, normalizeFluorescence = FALSE)
+addPlate(
+  file,
+  layout,
+  mode = "x3",
+  delimiter = "\\t",
+  point_measure = FALSE,
+  normalizeFluorescence = FALSE
+)
 }
 \arguments{
 \item{file}{A VictorX output file}
 
 \item{layout}{A .xlsx spreadsheet mapping samples to wells in a 96 well plate}
+
+\item{mode}{Which parsing function to use. Currently supports "x3" for Victor X3 conventional output file, or "nivo" for Victor Nivo files}
+
+\item{delimiter}{Field delimiter used in the file}
+
+\item{point_measure}{for mode = "nivo", tells whether the output file is a point measurement, or if there are several points into the same file}
 
 \item{normalizeFluorescence}{(logical) Should the fluorescence values be normalized by the absorbance?}
 }

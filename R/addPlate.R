@@ -1,12 +1,13 @@
 #' calculates all of the technical replicate means
 #' @inheritParams plateParser
 #' @param normalizeFluorescence (logical) Should the fluorescence values be normalized by the absorbance?
+#' @inheritParams readPlateInput
 #' @export
 #'
 
-addPlate <- function(file, layout, normalizeFluorescence = FALSE) {
+addPlate <- function(file, layout, mode = "x3", delimiter = "\t", point_measure = FALSE, normalizeFluorescence = FALSE) {
 
-  data <- plateParser(file, layout)
+  data <- plateParser(file, layout, mode = mode, delimiter = delimiter, point_measure = point_measure)
   normalize <- normalizeFluorescence
   collapsedTechnicalReps <- NULL
 

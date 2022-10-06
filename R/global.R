@@ -21,5 +21,16 @@ utils::globalVariables(c(".data",
                          "blank",
                          "value",
                          "normalized",
-                         '` `'))
+                         '` `',
+                         "Col",
+                         "Row",
+                         "X",
+                         "X.1",
+                         "X.2",
+                         "index",
+                         "Cycle",
+                         "Time(s)",
+                         "Plate",
+                         "Barcode",
+                         "Time"))
 
