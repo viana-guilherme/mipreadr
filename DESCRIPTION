@@ -1,6 +1,6 @@
 Package: mipreadr
 Title: Tidily access data from Perkin Elmer microplate reader software
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Guilherme", "Viana", , "viana.guilherme@proton.me", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
