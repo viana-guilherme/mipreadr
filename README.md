@@ -4,6 +4,11 @@
 # mipreadr
 
 <!-- badges: start -->
+
+``` r
+badge_devel("viana-guilherme/mipreadr", "blue"); badge_repostatus("Active")
+```
+
 <!-- badges: end -->
 
 **mipreadr** is a package that provides several functions to importing
@@ -32,16 +37,19 @@ createLayout("exp01")
 
 This will save an .xlsx sheet into your current working directory, which
 you can then edit to indicate the position of your samples and blanks
-within your plate. For this, please use the following convention: -
-Technical replicates should be named after their sample names and an
-unique experimental condition identifier, separed by a single underscore
-(\_). Eg: KT2440_M9  
-- A Blank well for a given condition identifier should be indicated
-using a hash sign (#). Eg: \#M9  
-- You may indicate different biological replicates in the same plate
-using an underscore followed by a number. Eg: KT2440_M9_1 and
-KT2440_M9_2. If there’s only one biological replicate in the plate, you
-may omit this information.
+within your plate. For this, please use the following convention:
+
+-   *Technical replicates* (within a plate) should be named after their
+    sample names and an unique experimental condition identifier,
+    separated by a single underscore (\_). Eg: KT2440_M9
+
+-   A *Blank* well for a given condition identifier should be indicated
+    using a hash sign (#). Eg: \#M9
+
+-   You may indicate different *biological replicates* in the same plate
+    using an underscore followed by a number. Eg: KT2440_M9_1 and
+    KT2440_M9_2. If there’s only one biological replicate in the plate,
+    you may omit this information.
 
 If you wish to edit the plate layout interactively within RStudio, set
 the parameter `interactive = TRUE`, this will open a shiny widget that
@@ -61,9 +69,11 @@ mCherry, Lux) normalized by absorbance (e.g. OD600)
 ``` r
 exp01 <- addPlate(file = "exp01.txt",
                   layout = "exp01_layout.xlsx",
+                  mode = "x3",
                   normalizeFluorescence = TRUE)
 exp02 <- addPlate(file = "exp02.txt",
                   layout = "exp02_layout.xlsx",
+                  mode = "x3",
                   normalizeFluorescence = TRUE)
 ```
 
