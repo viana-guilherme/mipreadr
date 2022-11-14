@@ -5,9 +5,10 @@
 
 <!-- badges: start -->
 
-``` r
-badge_devel("viana-guilherme/mipreadr", "blue"); badge_repostatus("Active")
-```
+[![](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)](https://github.com/viana-guilherme/mipreadr)
+[![Project Status: Active - The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 <!-- badges: end -->
 

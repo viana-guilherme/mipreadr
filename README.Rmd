@@ -19,9 +19,8 @@ library(badger)
 
 <!-- badges: start -->
 
-```r
-badge_devel("viana-guilherme/mipreadr", "blue"); badge_repostatus("Active")
-```
+`r badge_devel("viana-guilherme/mipreadr", "blue")`
+`r badge_repostatus("Active")`
 
 <!-- badges: end -->
 
