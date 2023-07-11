@@ -32,5 +32,10 @@ utils::globalVariables(c(".data",
                          "Time(s)",
                          "Plate",
                          "Barcode",
-                         "Time"))
+                         "Time",
+                         "Temperature(¡C)",
+                         "...51",
+                         "A1",
+                         "F8",
+                         "Absorbance"))
 
