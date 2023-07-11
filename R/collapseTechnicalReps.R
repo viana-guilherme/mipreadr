@@ -5,10 +5,11 @@
 #' @param sample_wells A character vector pointing the coordinates (e.g. "A01", "B02"...) for the sample within the plate
 #' @param blank_wells A character vector pointing the coordinates for the wells of the 'blank'
 #' @param normalizeFluorescence (logical) Should the fluorescence values be normalized by the absorbance?
+#' @param ignoreBlanks If TRUE, the blank wells mean is not subtracted from the sample means
 #' @return A small tibble with the calculated mean for the technical replicates
 #'
 
-collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells, normalizeFluorescence = FALSE) {
+collapseTechnicalReps <- function(sample_name, plate, sample_wells, blank_wells, normalizeFluorescence = FALSE, ignoreBlanks = FALSE) {
 
   # determining columns of interest for the function (absorbance, and fluorescence measurements)
 colnames_to_use <- colnames(plate) |>
@@ -38,8 +39,17 @@ colnames_to_use <- colnames(plate) |>
         dplyr::group_by(Repeat) |>
         dplyr::summarise(Mean = mean(.data[[colName]]))
 
+    ## TODO: improve on this code, this is a quick fix to allow not subtracting the blank
+    ## (which seems to be important in the case of softmax...)
+
+    if (ignoreBlanks) {
+      blank$Mean <- 0
+    }
+
 
     # TODO: CREATE A WAY TO SPECIFY NORMALIZATION METHOD
+    # currently it does not subtract the mean from the fluorescence, but we could allow
+    # any normlaization the user wants
 
     assign(x = varName, value = {
       sample |>

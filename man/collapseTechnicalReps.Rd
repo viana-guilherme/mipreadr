@@ -9,7 +9,8 @@ collapseTechnicalReps(
   plate,
   sample_wells,
   blank_wells,
-  normalizeFluorescence = FALSE
+  normalizeFluorescence = FALSE,
+  ignoreBlanks = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ collapseTechnicalReps(
 \item{blank_wells}{A character vector pointing the coordinates for the wells of the 'blank'}
 
 \item{normalizeFluorescence}{(logical) Should the fluorescence values be normalized by the absorbance?}
+
+\item{ignoreBlanks}{If TRUE, the blank wells mean is not subtracted from the sample means}
 }
 \value{
 A small tibble with the calculated mean for the technical replicates

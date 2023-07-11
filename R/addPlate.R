@@ -5,10 +5,11 @@
 #' @export
 #'
 
-addPlate <- function(file, layout, mode = "x3", delimiter = "\t", point_measure = FALSE, normalizeFluorescence = FALSE) {
+addPlate <- function(file, layout, mode = "x3", delimiter = "\t", point_measure = FALSE, normalizeFluorescence = FALSE, ignoreBlanks = FALSE) {
 
   data <- plateParser(file, layout, mode = mode, delimiter = delimiter, point_measure = point_measure)
   normalize <- normalizeFluorescence
+  blanks <- ignoreBlanks
   collapsedTechnicalReps <- NULL
 
   for (smp in 1:nrow(data$plate_layout_parsed)) {
@@ -25,7 +26,8 @@ addPlate <- function(file, layout, mode = "x3", delimiter = "\t", point_measure 
       plate = data$rawdata,
       sample_wells = wells,
       blank_wells =  blank,
-      normalizeFluorescence = normalize
+      normalizeFluorescence = normalize,
+      ignoreBlanks = blanks
     ) |>
       dplyr::mutate(Sample = sample,
                     Condition = condition,
