@@ -48,6 +48,7 @@ softmaxParser <- function(input_file) {
   dplyr::mutate(Plate = 1,
                 Repeat = timeToRepeats(Time),
                 Time = purrr::map_vec(Time, convertHours),
-                Well = purrr::map_vec(Well, formatWellNames)) |>
+                Well = purrr::map_vec(Well, formatWellNames),
+                `Absorbance (A)` = as.numeric(`Absorbance (A)`)) |> #sanitization step for some data formats
   dplyr::relocate(Plate, Repeat, Well, Time, `Absorbance (A)`)
 }

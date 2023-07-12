@@ -10,7 +10,8 @@ addPlate(
   mode = "x3",
   delimiter = "\\t",
   point_measure = FALSE,
-  normalizeFluorescence = FALSE
+  normalizeFluorescence = FALSE,
+  ignoreBlanks = FALSE
 )
 }
 \arguments{
