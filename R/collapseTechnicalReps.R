@@ -49,7 +49,7 @@ colnames_to_use <- colnames(plate) |>
 
     # TODO: CREATE A WAY TO SPECIFY NORMALIZATION METHOD
     # currently it does not subtract the mean from the fluorescence, but we could allow
-    # any normlaization the user wants
+    # any normalization the user wants
 
     assign(x = varName, value = {
       sample |>
