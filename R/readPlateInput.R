@@ -33,6 +33,8 @@ readPlateInput <- function(input_file, mode = "x3", delimiter = "\t", point_meas
 
   } else if (mode == "softmax") {
     plate_rawdata <-  softmaxParser(input_file)
+  } else if (mode == "biotek") {
+    plate_rawdata <-  biotekParser(input_file)
   } else {
     stop('Please enter a valid parsing mode (current accepted values are "x3" or "nivo")', call. = FALSE)
   }
