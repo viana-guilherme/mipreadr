@@ -4,12 +4,24 @@
 #' @export
 #'
 
-createLayout <- function(layout_name, interactive = FALSE) {
+createLayout <- function(layout_name, interactive = FALSE, platetype = "96") {
 
-  column_names <- c(NULL, c(paste0("0", 1:9), 10, 11, 12))
-  row_names <- c(NULL, LETTERS[1:8])
+  # the default is a 96-well plate
+  ncol <- 12
+  nrow <- 8
 
-  out_table <- matrix(data = " ",nrow = 8, ncol = 12) |>
+  if (platetype == "48") {
+    ncol <- 8
+    nrow <- 6
+  }
+
+  column_names <- 1:ncol |>
+                    as.character() |>
+                    purrr::map_chr(~ dplyr::if_else(stringr::str_length(.) == 1, glue::glue("0{.x}"), .x))
+
+  row_names <- c(NULL, LETTERS[1:nrow])
+
+  out_table <- matrix(data = " ",nrow = nrow, ncol = ncol) |>
                 magrittr::set_colnames(paste0('"',column_names,'"')) |>
                 magrittr::set_rownames(row_names) |>
                 tibble::as_tibble(rownames = " ")
